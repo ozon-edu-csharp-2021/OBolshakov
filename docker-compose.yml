@@ -15,3 +15,5 @@ services:
 
   merchandise-service:
     build: "./"
+    ports:
+      - "5009:5009"
