@@ -10,11 +10,15 @@ namespace merchandise_service.Infrastructure.Filters
         {
             var resultObject = new
             {
-                ExceptionType = context.Exception.GetType().FullName,
+                ExceptionName = context.Exception.GetType().FullName,
                 ExceptionStackTrace = context.Exception.StackTrace
             };
 
-            context.Result = new JsonResult(resultObject);
+            var jsonResult = new JsonResult(resultObject)
+            {
+                StatusCode = StatusCodes.Status500InternalServerError
+            };
+            context.Result = jsonResult;
         }
     }
 }

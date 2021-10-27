@@ -14,7 +14,7 @@ namespace merchandise_service.Infrastructure.Interceptors
         {
             _logger = logger;
         }
-        
+
         public override Task<TResponse> UnaryServerHandler<TRequest, TResponse>(TRequest request,
             ServerCallContext context,
             UnaryServerMethod<TRequest, TResponse> continuation)

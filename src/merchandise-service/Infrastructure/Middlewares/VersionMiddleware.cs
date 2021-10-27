@@ -6,11 +6,8 @@ namespace merchandise_service.Configuration.Middlewares
 {
     public class VersionMiddleware
     {
-        private readonly RequestDelegate _next;
-        
         public VersionMiddleware(RequestDelegate next)
         {
-            _next = next;
         }
 
         public async Task InvokeAsync(HttpContext context)

@@ -10,9 +10,10 @@ namespace merchandise_service.Configuration.Middlewares
         private readonly RequestDelegate _next;
         private readonly ILogger<ResponseLoggingMiddleware> _logger;
 
-        public ResponseLoggingMiddleware(RequestDelegate next)
+        public ResponseLoggingMiddleware(RequestDelegate next, ILogger<ResponseLoggingMiddleware> logger)
         {
             _next = next;
+            _logger = logger;
         }
 
         public async Task InvokeAsync(HttpContext context)
