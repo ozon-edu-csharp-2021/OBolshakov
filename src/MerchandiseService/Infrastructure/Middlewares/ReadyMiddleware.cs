@@ -14,7 +14,9 @@ namespace MerchandiseService.Infrastructure.Middlewares
 
         public async Task InvokeAsync(HttpContext context)
         {
+            context.Response.Headers.Add("test", "da");
             await context.Response.WriteAsync(StatusCodes.Status200OK.ToString());
+            //await _next(context);
         }
     }
 }
