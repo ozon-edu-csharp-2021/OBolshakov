@@ -53,7 +53,7 @@ namespace MerchandiseService.Infrastructure.Middlewares
                 {
                     responseHeader.Append($"{header.Key}:{header.Value.ToString()} ");
                 }
-                _logger.LogInformation($"Response head: {responseHeader}");
+                _logger.LogInformation($"Response head: {responseHeader}. {context.Request.Protocol}");
             }
             catch (Exception e)
             {

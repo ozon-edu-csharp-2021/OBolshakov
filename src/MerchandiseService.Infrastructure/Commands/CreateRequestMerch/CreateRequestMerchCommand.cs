@@ -1,6 +1,8 @@
-﻿namespace MerchandiseService.Models
+﻿using MediatR;
+
+namespace MerchandiseService.Infrastructure.Commands.CreateRequestMerch
 {
-    public class MerchItemCreationModel
+    public class CreateRequestMerchCommand : IRequest<int>
     {
         public long RequestNumber { get; init; }
 

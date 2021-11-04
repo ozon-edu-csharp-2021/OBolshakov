@@ -1,6 +1,8 @@
 ﻿using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
+using MerchandiseService.Infrastructure.Commands.CreateRequestMerch;
 using MerchandiseService.Models;
 using MerchandiseService.Services;
 using Microsoft.AspNetCore.Http;
@@ -14,10 +16,12 @@ namespace MerchandiseService.Controllers
     public class MerchController : ControllerBase
     {
         private readonly IMerchService _merchService;
+        private readonly IMediator _mediator;
 
-        public MerchController(IMerchService merchService)
+        public MerchController(IMerchService merchService, IMediator mediator)
         {
             _merchService = merchService;
+            _mediator = mediator;
         }
         
         /// <summary>
@@ -51,12 +55,18 @@ namespace MerchandiseService.Controllers
         [HttpPost]
         public async Task<ActionResult<MerchItem>> Add(MerchItemCreationModel postViewModel, CancellationToken token)
         {
-            var createdMerch = await _merchService.Add(new MerchItemCreationModel
+            var createMerchItemCommand = new CreateRequestMerchCommand()
             {
+                EmployeeName = postViewModel.EmployeeName,
                 ItemName = postViewModel.ItemName,
+                ItemType = postViewModel.ItemType,
+                ClothingSize = postViewModel.ClothingSize,
                 Quantity = postViewModel.Quantity
-            }, token);
-            return Ok(createdMerch);
+            };
+
+            var result = await _mediator.Send(createMerchItemCommand, token);
+            
+            return Ok(createMerchItemCommand);
         }
     }
 }
