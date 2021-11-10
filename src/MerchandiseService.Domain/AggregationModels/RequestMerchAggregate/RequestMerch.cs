@@ -8,7 +8,12 @@ namespace MerchandiseService.Domain.AggregationModels.RequestMerchAggregate
 {
     public class RequestMerch : Entity
     {
-        public RequestMerch(RequestNumber requestNumber, EmployeeName employeeName, ItemName itemName, Item itemType, ClothingSize size, Quantity quantity)
+        public RequestMerch(RequestNumber requestNumber,
+                            EmployeeName employeeName,
+                            ItemName itemName, 
+                            Item itemType, 
+                            ClothingSize size, 
+                            Quantity quantity)
         {
             RequestNumber = requestNumber;
             EmployeeName = employeeName;
@@ -16,9 +21,14 @@ namespace MerchandiseService.Domain.AggregationModels.RequestMerchAggregate
             ItemType = itemType;
             SetClothingSize(size);
             SetQuantity(quantity);
+            IssueStatus = IssueStatus.InWork;
         }
         
-        public RequestMerch(RequestNumber requestNumber, EmployeeName employeeName, ItemName itemName, Item itemType, Quantity quantity)
+        public RequestMerch(RequestNumber requestNumber, 
+                            EmployeeName employeeName, 
+                            ItemName itemName, 
+                            Item itemType, 
+                            Quantity quantity)
         {
             RequestNumber = requestNumber;
             EmployeeName = employeeName;
@@ -26,6 +36,7 @@ namespace MerchandiseService.Domain.AggregationModels.RequestMerchAggregate
             ItemType = itemType;
             SetClothingSize(null);
             SetQuantity(quantity);
+            IssueStatus = IssueStatus.InWork;
         }
 
         public RequestNumber RequestNumber { get; }
@@ -40,34 +51,34 @@ namespace MerchandiseService.Domain.AggregationModels.RequestMerchAggregate
         
         public Quantity Quantity { get; private set; }
 
-        public void GiveMerch(int valueToGive)
+        public IssueStatus IssueStatus { get; set; }
+
+        public bool IssuedMerch()
         {
-            if (valueToGive <= 0 || valueToGive > Quantity.Value)
-                throw new ArgumentException($"{nameof(valueToGive)} invalid value");
-            
-            Quantity = new Quantity(Quantity.Value - valueToGive);
+            // Поиск в БД, выдавался ли мерч сотруднику
+            return true;
         }
 
         public void SetClothingSize(ClothingSize size)
         {
             if (size is not null && (
-                ItemType.Type.Equals(ValueObjects.ItemType.TShirt) ||
-                ItemType.Type.Equals(ValueObjects.ItemType.Sweatshirt)))
+                    ItemType.Type.Equals(ValueObjects.ItemType.TShirt) ||
+                    ItemType.Type.Equals(ValueObjects.ItemType.Sweatshirt)))
                 ClothingSize = size;
-            else if (size is null && (
-                     ItemType.Type.Equals(ValueObjects.ItemType.TShirt) ||
-                     ItemType.Type.Equals(ValueObjects.ItemType.Sweatshirt)))
-                throw new RequestMerchSizeException($"The {ItemType.Type.Name} must have a size."); 
+            else if (size is null && !(
+                    ItemType.Type.Equals(ValueObjects.ItemType.TShirt) ||
+                    ItemType.Type.Equals(ValueObjects.ItemType.Sweatshirt)))
+                ClothingSize = null;
             else
             {
-                throw new RequestMerchSizeException($"The {ItemType.Type.Name} cannot get size.");    
+                throw new RequestMerchSizeException($"Wrong size for {ItemType.Type.Name}.");
             }
         }
         
         private void SetQuantity(Quantity value)
         {
-            if (value.Value < 0)
-                throw new NegativeValueException($"{nameof(value)} value is negative");
+            if (value.Value <= 0)
+                throw new NegativeValueException($"The quantity cannot be less than or equal to zero.");
 
             Quantity = value;
         }

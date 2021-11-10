@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -20,9 +21,17 @@ namespace MerchandiseService.Infrastructure.Middlewares
 
         public async Task InvokeAsync(HttpContext context)
         {
-            LogRequest(context);
-            await _next(context);
-            LogResponse(context);
+            bool? checkTypeRequest = context.Request.ContentType?.Contains("application/grpc");
+            if (checkTypeRequest != true)
+            {
+                LogRequest(context);
+                await _next(context);
+                LogResponse(context);
+            }
+            else
+            {
+                await _next(context);
+            }
         }
 
         private void LogRequest(HttpContext context)
@@ -35,8 +44,10 @@ namespace MerchandiseService.Infrastructure.Middlewares
                 {
                     requestHeader.Append($"{header.Key}:{header.Value.ToString()} ");
                 }
+
                 _logger.LogInformation($"Request route: {requestRoute}");
                 _logger.LogInformation($"Request head: {requestHeader}");
+                
             }
             catch (Exception e)
             {
@@ -49,11 +60,13 @@ namespace MerchandiseService.Infrastructure.Middlewares
             try
             {
                 var responseHeader = new StringBuilder();
-                foreach (var header in context.Response.GetTypedHeaders().Headers)
+                foreach (var header in context.Response.Headers)
                 {
                     responseHeader.Append($"{header.Key}:{header.Value.ToString()} ");
                 }
-                _logger.LogInformation($"Response head: {responseHeader}. {context.Request.Protocol}");
+
+                _logger.LogInformation($"Response head: {responseHeader}");
+                
             }
             catch (Exception e)
             {
