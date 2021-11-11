@@ -2,7 +2,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using MerchandiseService.Infrastructure.Commands.CreateRequestMerch;
+using MerchandiseService.Infrastructure.Commands.ReservationMerch;
+using MerchandiseService.Infrastructure.Queries.RequestMerchAggregate;
 using MerchandiseService.Models;
 using MerchandiseService.Services;
 using Microsoft.AspNetCore.Http;
@@ -38,24 +39,25 @@ namespace MerchandiseService.Controllers
         /// Ищет merch по id.
         /// </summary>
         [HttpGet("{id:long}")]
-        public async Task<ActionResult<MerchItem>> GetById(long id, CancellationToken token)
+        public async Task<ActionResult<string>> GetById(long id, CancellationToken token)
         {
-            var merchService = await _merchService.GetById(id, token);
-            if (merchService is null)
+            var issueStatus = new GetIssueStatusQuery()
             {
-                return NotFound();
-            }
+                RequestNumber = id
+            };
+            
+            var result = await _mediator.Send(issueStatus, token);
 
-            return merchService;
+            return result;
         }
 
         /// <summary>
         /// Добавляет merch.
         /// </summary>
         [HttpPost]
-        public async Task<ActionResult<MerchItem>> Add(MerchItemCreationModel postViewModel, CancellationToken token)
+        public async Task<ActionResult<MerchItem>> AddReservation(MerchItemCreationModel postViewModel, CancellationToken token)
         {
-            var createMerchItemCommand = new CreateRequestMerchCommand()
+            var createReservationMerchCommand = new ReservationMerchCommand()
             {
                 EmployeeName = postViewModel.EmployeeName,
                 ItemName = postViewModel.ItemName,
@@ -64,9 +66,9 @@ namespace MerchandiseService.Controllers
                 Quantity = postViewModel.Quantity
             };
 
-            var result = await _mediator.Send(createMerchItemCommand, token);
+            var result = await _mediator.Send(createReservationMerchCommand, token);
             
-            return Ok(createMerchItemCommand);
+            return Ok(createReservationMerchCommand);
         }
     }
 }

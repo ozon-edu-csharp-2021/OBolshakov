@@ -1,6 +1,6 @@
 ﻿using MerchandiseService.Domain.Models;
 
-namespace MerchandiseService.Domain.AggregationModels.ValueObjects
+namespace MerchandiseService.Domain.AggregationModels.RequestMerchAggregate
 {
     public class ItemType : Enumeration
     {

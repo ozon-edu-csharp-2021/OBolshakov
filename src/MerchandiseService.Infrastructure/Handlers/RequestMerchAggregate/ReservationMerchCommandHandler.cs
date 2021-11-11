@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using MerchandiseService.Domain.AggregationModels.RequestMerchAggregate;
-using MerchandiseService.Domain.AggregationModels.ValueObjects;
 using MerchandiseService.Domain.Models;
 using MerchandiseService.Infrastructure.Commands.ReservationMerch;
 
@@ -22,7 +21,7 @@ namespace MerchandiseService.Infrastructure.Handlers.RequestMerchAggregate
         public async Task<string> Handle(ReservationMerchCommand request, CancellationToken cancellationToken)
         {
             var newRequestMerch = new RequestMerch(
-                new RequestNumber(request.RequestNumber),
+                null,
                 new EmployeeName(request.EmployeeName),
                 new ItemName(request.ItemName),
                 new Item(ItemType.GetAll<ItemType>().FirstOrDefault(it => it.Id.Equals(request.ItemType))),
@@ -34,7 +33,7 @@ namespace MerchandiseService.Infrastructure.Handlers.RequestMerchAggregate
             
             if (newRequestMerch.IssuedMerch())
             {
-                return $"Merch has already been issued.";
+                throw new Exception("Merch has already been issued.");
             }
             
             // Обращение к Stock api для получения информации о наличии мерча

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MerchandiseService.Domain.Exceptions
+namespace MerchandiseService.Domain.Exceptions.RequestMerchAggregate
 {
     public class NegativeValueException : Exception
     {

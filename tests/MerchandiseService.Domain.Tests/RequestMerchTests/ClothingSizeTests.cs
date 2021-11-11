@@ -1,6 +1,5 @@
 ﻿using System;
 using MerchandiseService.Domain.AggregationModels.RequestMerchAggregate;
-using MerchandiseService.Domain.AggregationModels.ValueObjects;
 using MerchandiseService.Domain.Exceptions.RequestMerchAggregate;
 using Xunit;
 
@@ -52,12 +51,13 @@ namespace MerchandiseService.Domain.Tests.RequestMerchTests
                 new EmployeeName("Oleg Bolshakov"),
                 new ItemName("Sweatshirt"),
                 new Item(ItemType.Sweatshirt),
+                ClothingSize.S,
                 new Quantity(10));
         
             // Act
         
             //Assert
-            Assert.Throws<RequestMerchSizeException>(() => requestMerch.ClothingSize);
+            Assert.Throws<RequestMerchSizeException>(() => requestMerch.SetClothingSize(null));
         }
         
         [Fact]
@@ -67,15 +67,14 @@ namespace MerchandiseService.Domain.Tests.RequestMerchTests
             var requestMerch = new RequestMerch(
                 new RequestNumber(15),
                 new EmployeeName("Oleg Bolshakov"),
-                new ItemName("TShirt"),
+                new ItemName("Pen"),
                 new Item(ItemType.Pen),
-                ClothingSize.XXL,
                 new Quantity(10));
         
             // Act
         
             //Assert
-            Assert.Throws<RequestMerchSizeException>(() => requestMerch);
+            Assert.Throws<RequestMerchSizeException>(() => requestMerch.SetClothingSize(ClothingSize.XXL));
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace MerchandiseService.Domain.AggregationModels.IssueRequestAggregate
+﻿namespace MerchandiseService.Domain.AggregationModels.RequestEmailAggregate
 {
     public class RequestNumber
     {

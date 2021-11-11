@@ -1,10 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using MerchandiseService.Domain.AggregationModels.IssueRequestAggregate;
 using MerchandiseService.Domain.AggregationModels.RequestMerchAggregate;
 using MerchandiseService.Domain.Contracts;
-using MerchandiseService.Infrastructure.Handlers;
 using MerchandiseService.Infrastructure.Handlers.RequestMerchAggregate;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,7 +12,7 @@ namespace MerchandiseService.Infrastructure.Extensions
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
         {
-            services.AddMediatR(typeof(CreateRequestMerchCommandHandler).Assembly);
+            services.AddMediatR(typeof(ReservationMerchCommandHandler).Assembly);
             services.AddScoped<IRequestMerchRepository, Repo>();
             
             return services;

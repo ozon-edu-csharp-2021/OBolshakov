@@ -1,6 +1,4 @@
 ﻿using System;
-using MerchandiseService.Domain.AggregationModels.ValueObjects;
-using MerchandiseService.Domain.Exceptions;
 using MerchandiseService.Domain.Exceptions.RequestMerchAggregate;
 using MerchandiseService.Domain.Models;
 
@@ -24,7 +22,7 @@ namespace MerchandiseService.Domain.AggregationModels.RequestMerchAggregate
             IssueStatus = IssueStatus.InWork;
         }
         
-        public RequestMerch(RequestNumber requestNumber, 
+        public RequestMerch(RequestNumber requestNumber,
                             EmployeeName employeeName, 
                             ItemName itemName, 
                             Item itemType, 
@@ -62,12 +60,12 @@ namespace MerchandiseService.Domain.AggregationModels.RequestMerchAggregate
         public void SetClothingSize(ClothingSize size)
         {
             if (size is not null && (
-                    ItemType.Type.Equals(ValueObjects.ItemType.TShirt) ||
-                    ItemType.Type.Equals(ValueObjects.ItemType.Sweatshirt)))
+                    ItemType.Type.Equals(RequestMerchAggregate.ItemType.TShirt) ||
+                    ItemType.Type.Equals(RequestMerchAggregate.ItemType.Sweatshirt)))
                 ClothingSize = size;
             else if (size is null && !(
-                    ItemType.Type.Equals(ValueObjects.ItemType.TShirt) ||
-                    ItemType.Type.Equals(ValueObjects.ItemType.Sweatshirt)))
+                    ItemType.Type.Equals(RequestMerchAggregate.ItemType.TShirt) ||
+                    ItemType.Type.Equals(RequestMerchAggregate.ItemType.Sweatshirt)))
                 ClothingSize = null;
             else
             {
@@ -75,19 +73,12 @@ namespace MerchandiseService.Domain.AggregationModels.RequestMerchAggregate
             }
         }
         
-        private void SetQuantity(Quantity value)
+        public void SetQuantity(Quantity value)
         {
             if (value.Value <= 0)
                 throw new NegativeValueException($"The quantity cannot be less than or equal to zero.");
 
             Quantity = value;
         }
-
-        /*private void AddReachedMinimumDomainEvent(Sku sku)
-        {
-            var orderStartedDomainEvent = new ReachedMinimumStockItemsNumberDomainEvent(sku);
-
-            this.AddDomainEvent(orderStartedDomainEvent);
-        }*/
     }
 }

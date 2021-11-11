@@ -1,5 +1,4 @@
-﻿using MerchandiseService.Domain.AggregationModels.ValueObjects;
-using MerchandiseService.Domain.Models;
+﻿using MerchandiseService.Domain.Models;
 
 namespace MerchandiseService.Domain.AggregationModels.RequestMerchAggregate
 {
