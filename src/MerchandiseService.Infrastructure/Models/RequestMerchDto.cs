@@ -1,6 +1,6 @@
-﻿namespace MerchandiseService.HttpModels
+﻿namespace MerchandiseService.Infrastructure.Models
 {
-    public class MerchResponse
+    public class RequestMerchDto
     {
         public string EmployeeName { get; init; }
 

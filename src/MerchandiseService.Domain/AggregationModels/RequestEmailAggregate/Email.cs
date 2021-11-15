@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using MerchandiseService.Domain.Exceptions.ReuqestEmailAggregate;
 using MerchandiseService.Domain.Models;
 
 namespace MerchandiseService.Domain.AggregationModels.RequestEmailAggregate
@@ -18,16 +19,13 @@ namespace MerchandiseService.Domain.AggregationModels.RequestEmailAggregate
             {
                 return new Email(emailString);
             }
-
-            // TODO: тут конечно же должно быть нормальное исключение
-            throw new Exception($"Email is invalid: {emailString}");
+            
+            throw new InvalidValueException($"Email is invalid: {emailString}");
         }
-
-        /// <inheritdoc />
+        
         public override string ToString()
             => Value;
-
-        /// <inheritdoc />
+        
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return Value;

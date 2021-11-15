@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using MerchandiseService.Domain.AggregationModels.RequestMerchAggregate;
@@ -38,6 +39,11 @@ namespace MerchandiseService.Infrastructure.Extensions
         }
 
         public Task<RequestMerch> FindByIdAsync(long id, CancellationToken cancellationToken = default)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<IReadOnlyList<RequestMerch>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             throw new System.NotImplementedException();
         }

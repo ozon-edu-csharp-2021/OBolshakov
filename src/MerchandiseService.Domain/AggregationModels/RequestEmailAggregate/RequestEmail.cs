@@ -22,11 +22,5 @@ namespace MerchandiseService.Domain.AggregationModels.RequestEmailAggregate
         public TitleMessage TitleMessage { get; }
 
         public Message Message { get; }
-
-        public bool IssuedMerch()
-        {
-            // Поиск в БД, выдавался ли мерч сотруднику
-            return true;
-        }
     }
 }
