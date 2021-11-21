@@ -1,17 +1,17 @@
-﻿namespace MerchandiseService.HttpModels
+﻿using MediatR;
+
+namespace MerchandiseService.Infrastructure.Commands.ReservationMerch
 {
-    public class MerchResponse
+    public class ReservationMerchCommand : IRequest<string>
     {
         public string EmployeeName { get; init; }
 
         public string ItemName { get; init; }
 
-        public int ItemType { get; init; }
+        public string ItemType { get; init; }
         
         public int ClothingSize { get; init; }
         
         public int Quantity { get; init; }
-
-        public int IssueStatus { get; init; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -46,6 +47,7 @@ namespace MerchandiseService.Infrastructure.Middlewares
 
                 _logger.LogInformation($"Request route: {requestRoute}");
                 _logger.LogInformation($"Request head: {requestHeader}");
+                
             }
             catch (Exception e)
             {
@@ -64,6 +66,7 @@ namespace MerchandiseService.Infrastructure.Middlewares
                 }
 
                 _logger.LogInformation($"Response head: {responseHeader}");
+                
             }
             catch (Exception e)
             {

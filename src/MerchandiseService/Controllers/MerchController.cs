@@ -1,9 +1,12 @@
-﻿using System.Net.Http;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
+using MerchandiseService.HttpModels;
+using MerchandiseService.Infrastructure.Commands.ReservationMerch;
+using MerchandiseService.Infrastructure.Queries.RequestMerchAggregate;
 using MerchandiseService.Models;
 using MerchandiseService.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MerchandiseService.Controllers
@@ -14,49 +17,69 @@ namespace MerchandiseService.Controllers
     public class MerchController : ControllerBase
     {
         private readonly IMerchService _merchService;
+        private readonly IMediator _mediator;
 
-        public MerchController(IMerchService merchService)
+        public MerchController(IMerchService merchService, IMediator mediator)
         {
             _merchService = merchService;
+            _mediator = mediator;
         }
         
         /// <summary>
         /// Ищет все merch.
         /// </summary>
         [HttpGet]
-        public async Task<IActionResult> GetAll(CancellationToken token)
+        public async Task<MerchResponse[]> GetAll(CancellationToken token)
         {
-            var merchService = await _merchService.GetAll(token);
-            return Ok(merchService);
+            var merch = new GetAllRequestMerchQuery();
+            
+            var result = await _mediator.Send(merch, token);
+
+            return result.Items.Select(item => new MerchResponse
+            {
+                EmployeeName = item.EmployeeName,
+                ItemName = item.ItemName,
+                ItemType = item.ItemType,
+                ClothingSize = item.ClothingSize,
+                Quantity = item.Quantity,
+                IssueStatus = item.IssueStatus
+            }).ToArray();
         }
         
         /// <summary>
         /// Ищет merch по id.
         /// </summary>
         [HttpGet("{id:long}")]
-        public async Task<ActionResult<MerchItem>> GetById(long id, CancellationToken token)
+        public async Task<ActionResult<MerchResponse>> GetById(long id, CancellationToken token)
         {
-            var merchService = await _merchService.GetById(id, token);
-            if (merchService is null)
+            var merch = new GetByIdRequestMerchQuery
             {
-                return NotFound();
-            }
+                RequestNumber = id
+            };
+            
+            var result = await _mediator.Send(merch, token);
 
-            return merchService;
+            return Ok(result);
         }
 
         /// <summary>
         /// Добавляет merch.
         /// </summary>
         [HttpPost]
-        public async Task<ActionResult<MerchItem>> Add(MerchItemCreationModel postViewModel, CancellationToken token)
+        public async Task<ActionResult<MerchResponse>> AddReservation(MerchItemCreationModel postViewModel, CancellationToken token)
         {
-            var createdMerch = await _merchService.Add(new MerchItemCreationModel
+            var createReservationMerchCommand = new ReservationMerchCommand
             {
+                EmployeeName = postViewModel.EmployeeName,
                 ItemName = postViewModel.ItemName,
+                ItemType = postViewModel.ItemType,
+                ClothingSize = postViewModel.ClothingSize,
                 Quantity = postViewModel.Quantity
-            }, token);
-            return Ok(createdMerch);
+            };
+
+            var result = await _mediator.Send(createReservationMerchCommand, token);
+            
+            return Ok(createReservationMerchCommand);
         }
     }
 }
